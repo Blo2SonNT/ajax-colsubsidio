@@ -4,6 +4,14 @@ console.log(boton_magia)
 boton_magia.onclick = function(e) {
     e.preventDefault()
     let info_form = new FormData($('#form_user_year')[0])
+    var resAjx;
+    (function(resAjx) {
+        resAjx[resAjx["datosGuardaos"] = 1] = "datosGuardaos";
+        resAjx[resAjx["campoNombre"] = 2] = "campoNombre";
+        resAjx[resAjx["edadIncompleto"] = 3] = "edadIncompleto";
+        resAjx[resAjx["errorDataBase"] = 4] = "errorDataBase";
+    })(resAjx || (resAjx = {}));
+
 
     $.ajax({
         type: "POST",
@@ -24,31 +32,34 @@ boton_magia.onclick = function(e) {
             $('#alerta-formulario').show('fast')
             res = parseInt(response)
             switch (res) {
-                case 1:
-                    console.log('todo bien, todo correcto')
-                    $('#form_user_year').trigger('reset')
-                        // $('#alerta-formulario').text('Datos guardados').addClass('alert-success')
+                case resAjx.datosGuardaos:
+                    console.log('todo bien, todo correcto');
+                    $('#form_user_year').trigger('reset');
+                    // $('#alerta-formulario').text('Datos guardados').addClass('alert-success')
                     Swal.fire({
                         icon: 'success',
                         title: 'Datos guardados',
                         text: ':D',
                     })
                     break;
-                case 2:
-                    console.log('entro en el caso 2')
-                        //$('#alerta-formulario').text('Alerta: hacen falta datos').addClass('alert-warning')
+                case resAjx.campoNombre:
+                    console.log('entro en el caso 2');
+                    //$('#alerta-formulario').text('Alerta: hacen falta datos').addClass('alert-warning')
                     Swal.fire({
                         icon: 'warning',
                         title: 'Faltan datos',
                         text: '>:|',
                     })
                     break;
+                case resAjx.edadIncompleto:
+                    console.log('posicion 3');
+                    break;
+                case resAjx.errorDataBase:
+                    console.log('posicion 4');
+                    break;
             }
         }
     })
-
-
-
 }
 
 
